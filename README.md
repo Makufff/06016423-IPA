@@ -16,7 +16,7 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 Clone the repo and sync the environment. `uv sync` creates a virtual environment in `.venv/` and installs all dependencies from `pyproject.toml`:
 
 ```bash
-git clone <repo-url>
+git clone https://github.com/Makufff/06016423-IPA.git
 cd 06016423-IPA
 uv sync
 ```
