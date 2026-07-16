@@ -1,7 +1,7 @@
 import paramiko
 
 USERNAME = 'cisco'
-KEY_PATH = '/home/makufff/.ssh/id_rsa'
+KEY_PATH = 'private_key.key'
 
 devices_ip = [
     "172.31.67.1",   # R0
@@ -21,8 +21,7 @@ for ip in devices_ip:
         hostname=ip,
         username=USERNAME,
         pkey=private_key,
-        look_for_keys=False,
-        allow_agent=False,
+        disabled_algorithms={"pubkeys": ["rsa-sha2-256", "rsa-sha2-512"]}
     )
 
     stdin, stdout, stderr = client.exec_command("show ip interface brief")
