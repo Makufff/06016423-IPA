@@ -1,7 +1,7 @@
 import paramiko
 
 USERNAME = 'cisco'
-KEY_PATH = '/home/ubuntu/.ssh/id_rsa'
+KEY_PATH = '/home/makufff/.ssh/id_rsa'
 
 devices_ip = [
     "172.31.67.1",   # R0
