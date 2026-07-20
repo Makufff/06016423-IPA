@@ -4,31 +4,35 @@ USERNAME = "cisco"
 KEY_PATH = "private_key.key"
 
 devices = {
-    "172.31.67.1": "r0-running-config.log",   # R0
+    "172.31.67.1": "r0-running-config.log",
 }
 
 private_key = paramiko.RSAKey.from_private_key_file(KEY_PATH)
 
 for ip, filename in devices.items():
-    client = paramiko.SSHClient()
-    client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-
     print(f"(Public-key) Connecting to {ip}")
 
-    client.connect(
-        hostname=ip,
-        username=USERNAME,
-        pkey=private_key,
-        disabled_algorithms={"pubkeys": ["rsa-sha2-256", "rsa-sha2-512"]},
-    )
+    with paramiko.SSHClient() as client:
+        client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
-    stdin, stdout, stderr = client.exec_command("show run")
+        client.connect(
+            hostname=ip,
+            username=USERNAME,
+            pkey=private_key,
+            disabled_algorithms={
+                "pubkeys": ["rsa-sha2-256", "rsa-sha2-512"]
+            },
+        )
 
-    output = stdout.read().decode()
-    error = stderr.read().decode()
+        stdin, stdout, stderr = client.exec_command("show run")
 
-    with open(filename, "w") as f:
-        f.write(output)
+        output = stdout.read().decode()
+
+        with open(filename, "w") as f:
+            f.write(output)
+
+        stdin.close()
+        stdout.close()
+        stderr.close()
+
     print(f"Running configuration saved to {filename}")
-
-    client.close()
