@@ -1,5 +1,5 @@
 from jinja2 import Environment, FileSystemLoader
-from scripts.netmiko.netmikolab import ConnectHandler
+from netmiko import ConnectHandler
 from pathlib import Path
 
 USERNAME = 'cisco'
