@@ -1,0 +1,10 @@
+! S1 : VLAN 101 Configuration
+
+vlan {{ vlan_id }}
+exit
+{% for port in access_ports %}
+int {{ port }}
+switchport access vlan {{ vlan_id }}
+{% endfor %}
+int vlan {{ vlan_id }}
+no shut

@@ -1,0 +1,24 @@
+! R1 : OSPF and Access List Configuration
+
+{% if remove_routes %}
+{% for route in remove_routes %}
+{{ route }}
+{% endfor %}
+{% endif %}
+
+int lo0
+vrf forwarding {{ vrf_name }}
+ip address {{ loopback_ip }} 255.255.255.255
+no shut
+
+router ospf {{ ospf_id }} vrf {{ vrf_name }}
+router-id {{ router_id }}
+{% for network in networks %}
+network {{ network.prefix }} {{ network.wildcard }} area {{ network.area }}
+{% endfor %}
+
+{% for acl in access_lists %}
+access-list {{ acl.number }} permit {{ acl.subnet }} {{ acl.wildcard }}
+{% endfor %}
+line vty 0 4
+access-class 20 in
