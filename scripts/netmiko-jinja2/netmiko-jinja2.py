@@ -13,11 +13,9 @@ DEVICES = {
     "R2": "172.31.67.5",
 }
 
-# Setup Jinja2 environment
 template_dir = Path(__file__).parent / "templates"
 env = Environment(loader=FileSystemLoader(template_dir))
 
-# Device-specific configuration data
 S1_DATA = {
     "vlan_id": 101,
     "access_ports": ["g0/1", "g1/1"]
@@ -68,7 +66,6 @@ R2_DATA = {
     ]
 }
 
-# Map devices to their templates and data
 DEVICE_CONFIGS = {
     "S1": ("s1_vlan.j2", S1_DATA),
     "R1": ("r1_ospf.j2", R1_DATA),
@@ -77,10 +74,8 @@ DEVICE_CONFIGS = {
 
 
 def render_config(template_name: str, data: dict) -> list[str]:
-    """Render Jinja2 template and return as list of commands."""
     template = env.get_template(template_name)
     rendered = template.render(data)
-    # Parse rendered template into commands, filtering out empty lines and comments
     commands = [
         line.strip()
         for line in rendered.split('\n')
@@ -89,40 +84,33 @@ def render_config(template_name: str, data: dict) -> list[str]:
     return commands
 
 
-def main() -> None:
-    for name, host in DEVICES.items():
-        network_device = {
-            "device_type": "cisco_ios",
-            "host": host,
-            "username": USERNAME,
-            "secret": "cisco",
-            "use_keys": True,
-            "key_file": KEY_PATH,
-            "disabled_algorithms": {
-                "pubkeys": ["rsa-sha2-256", "rsa-sha2-512"]
-            },
-        }
+for name, host in DEVICES.items():
+    network_device = {
+        "device_type": "cisco_ios",
+        "host": host,
+        "username": USERNAME,
+        "secret": "cisco",
+        "use_keys": True,
+        "key_file": KEY_PATH,
+        "disabled_algorithms": {
+            "pubkeys": ["rsa-sha2-256", "rsa-sha2-512"]
+        },
+    }
 
-        net_connect = ConnectHandler(**network_device)
-        net_connect.enable()
-        print(f"Connected to {name}")
+    net_connect = ConnectHandler(**network_device)
+    net_connect.enable()
+    print(f"Connected to {name}")
 
-        # Apply configuration if device has a template
-        if name in DEVICE_CONFIGS:
-            template_name, config_data = DEVICE_CONFIGS[name]
-            config_commands = render_config(template_name, config_data)
-            net_connect.send_config_set(config_commands)
-            print(f"[✓] Configuration applied to {name} using {template_name}")
-        else:
-            print(f"[i] No configuration template for {name}")
+    if name in DEVICE_CONFIGS:
+        template_name, config_data = DEVICE_CONFIGS[name]
+        config_commands = render_config(template_name, config_data)
+        net_connect.send_config_set(config_commands)
+        print(f"[✓] Configuration applied to {name} using {template_name}")
+    else:
+        print(f"[i] No configuration template for {name}")
 
-        # Show interface status
-        output = net_connect.send_command("show ip int br")
-        print(output)
-        print()
+    output = net_connect.send_command("show ip int br")
+    print(output)
+    print()
 
-        net_connect.disconnect()
-
-
-if __name__ == "__main__":
-    main()
+    net_connect.disconnect()
