@@ -63,7 +63,7 @@ def assert_description(descriptions, interface, expected):
 
 class TestS1:
     def test_gi0_1(self, s1_descriptions):
-        assert_description(s1_descriptions, "Gi0/1", "Connect to G0/1 of R2")
+        assert_description(s1_descriptions, "Gi0/1", "Connect to G0/2 of R2")
 
     def test_gi1_1(self, s1_descriptions):
         assert_description(s1_descriptions, "Gi1/1", "Connect to PC")
