@@ -1,0 +1,42 @@
+! R2 : OSPF, NAT and Access List Configuration
+
+{% if remove_routes %}
+{% for route in remove_routes %}
+{{ route }}
+{% endfor %}
+{% endif %}
+
+int lo0
+vrf forwarding {{ vrf_name }}
+ip address {{ loopback_ip }} 255.255.255.255
+no shut
+
+int g0/2
+no shutdown
+
+router ospf {{ ospf_id }} vrf {{ vrf_name }}
+router-id {{ router_id }}
+default-information originate always
+{% for network in networks %}
+network {{ network.prefix }} {{ network.wildcard }} area {{ network.area }}
+{% endfor %}
+
+int g0/3
+vrf forwarding {{ vrf_name }}
+ip address dhcp
+no shutdown
+ip nat outside
+
+int range g0/1-2
+ip nat inside
+
+{% for acl in nat_acls %}
+access-list {{ acl.number }} permit {{ acl.subnet }} {{ acl.wildcard }}
+{% endfor %}
+ip nat inside source list {{ nat_inside_list }} interface g0/3 vrf {{ vrf_name }} overload
+
+{% for acl in access_lists %}
+access-list {{ acl.number }} permit {{ acl.subnet }} {{ acl.wildcard }}
+{% endfor %}
+line vty 0 4
+access-class 20 in
