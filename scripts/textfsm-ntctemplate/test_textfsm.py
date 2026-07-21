@@ -63,7 +63,7 @@ def assert_description(descriptions, interface, expected):
 
 class TestS1:
     def test_gi0_1(self, s1_descriptions):
-        assert_description(s1_descriptions, "Gi0/1", "Connect to G0/1 of R1")
+        assert_description(s1_descriptions, "Gi0/1", "Connect to G0/1 of R2")
 
     def test_gi1_1(self, s1_descriptions):
         assert_description(s1_descriptions, "Gi1/1", "Connect to PC")
@@ -71,7 +71,7 @@ class TestS1:
 
 class TestR1:
     def test_gi0_1(self, r1_descriptions):
-        assert_description(r1_descriptions, "Gi0/1", "Connect to G0/1 of S1")
+        assert_description(r1_descriptions, "Gi0/1", "Connect to G0/1 of PC")
 
     def test_gi0_2(self, r1_descriptions):
         assert_description(r1_descriptions, "Gi0/2", "Connect to G0/1 of R2")
@@ -82,7 +82,7 @@ class TestR2:
         assert_description(r2_descriptions, "Gi0/1", "Connect to G0/2 of R1")
 
     def test_gi0_2(self, r2_descriptions):
-        assert_description(r2_descriptions, "Gi0/2", "Connect to PC")
+        assert_description(r2_descriptions, "Gi0/2", "Connect to G0/1 of S1")
 
     def test_gi0_3(self, r2_descriptions):
         assert_description(r2_descriptions, "Gi0/3", "Connect to WAN")
