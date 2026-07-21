@@ -7,5 +7,8 @@ requires-python = ">=3.11"
 dependencies = [
     "jinja2>=3.0.0",
     "netmiko>=4.0.0",
+    "ntc-templates>=9.2.0",
     "paramiko==2.12.0",
+    "pytest>=9.1.1",
+    "textfsm>=2.1.0",
 ]
