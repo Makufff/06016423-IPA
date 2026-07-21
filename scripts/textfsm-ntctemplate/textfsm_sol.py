@@ -17,14 +17,16 @@ MGMT_DEVICES = {"R0", "S0"}
 MGMT_INTERFACES = {"GigabitEthernet0/0"}
 
 STATIC_DESCRIPTIONS = {
-    "R1": {},
+    "R1": {
+        "GigabitEthernet0/1": "Connect to PC"
+    },
     "R2": {
-        "GigabitEthernet0/2": "Connect to PC",
+        "GigabitEthernet0/2": "Connect to G0/1 of S1",
         "GigabitEthernet0/3": "Connect to WAN",
     },
     "S1": {
         "GigabitEthernet1/1": "Connect to PC",
-    },
+    },  
 }
 
 INTERFACE_ABBREVIATIONS = [
